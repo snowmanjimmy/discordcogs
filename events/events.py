@@ -5,11 +5,12 @@ from .utils.dataIO import dataIO
 from .utils import checks
 from __main__ import send_cmd_help
 import os
+from os.path import isfile
 import time
 import random
 
 try:
-    from prettytables import PrettyTables
+    from prettytable import PrettyTable
     ptAvailable = True
 except:
     ptAvailable = False
@@ -21,19 +22,19 @@ class Events:
 
     def __init__(self, bot):
         self.bot = bot
-        self.file_path = "data/events/events.json"
-        self.all_events = dataIO.load_json(self.file_path)
+        self.file_path = "data/events/"
+        #self.all_events = dataIO.load_json(self.file_path)
         #self.eventid = 0
 
     # Function to add attendee to an existing event - will be called with the !event rsvp function -- may be removed and
     # integrated into the !event rsvp command itself
     def add_attendee(self, eventid, attendee):
-        with open(self.file_path) as f:
+        with open(self.file_path + "/" + eventid + ".json") as f:
             newdata = dataIO.load_json(f)
 
         newdata[eventid]["attending"].append(attendee)
 
-        with open(self.file_path) as f:
+        with open(self.file_path + "/" + eventid + ".json") as f:
             dataIO.save_json(f, newdata)
 
     # Creating a command group due to multiple commands with the parameter
@@ -56,20 +57,24 @@ class Events:
 
         user = ctx.message.author
         eventid = str(random.randint(10000, 99999))
+        temp_filename = self.file_path + "/" + eventid + ".json"
+        if temp_filename.isfile():
+            eventid = str(random.randint(10000, 99999))
+
         #await self.bot.say("Event created by " + user.mention)
 
         #with open(self.file_path) as f:
         #    newdata = dataIO.load_json(f)
 
         data = {"eventName": eventname, "eventOrganizer": str(user), "eventDate": eventdate, "attending": []}
-        databuffer = dataIO.load_json(self.file_path)
+        #databuffer = dataIO.load_json(self.file_path)
 
         #await self.bot.say(tempdata)
 
-        databuffer[eventid] = data
+        #databuffer[eventid] = data
 
-        with open(self.file_path) as f:
-            dataIO.save_json(f, databuffer)
+        with open(self.file_path + "/" + eventid + ".json") as f:
+            dataIO.save_json(f, data)
 
         #dataIO.save_json(self.file_path, data)
 
@@ -120,4 +125,4 @@ def setup(bot):
     if ptAvailable:
         bot.add_cog(Events(bot))
     else:
-        raise RuntimeError("You need to run `pip3 install prettytables`")
+        raise RuntimeError("You need to run **pip3 install prettytable**")
