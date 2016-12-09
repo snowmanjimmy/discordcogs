@@ -1,0 +1,7 @@
+{
+    "AUTHOR" : "SnowmanJimmy/Shue",
+    "INSTALL_MSG" : "This cog requires PrettyTables.\nType pip3 install prettytables into cmd prompt to install these libraries.\n",
+    "NAME" : "Events",
+    "SHORT" : "Create and display events in Discord",
+    "DESCRIPTION" : "Create and display events that users can RSVP to - shows dates and who's RSVPed"
+}
